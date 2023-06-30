@@ -1,0 +1,29 @@
+# Python virtual environments
+venv/
+.env/
+
+# Development and version control
+.git/
+.gitignore
+.pytest_cache/
+
+# Editor-specific files and temporary files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build artifacts and compiled Python files
+*.pyc
+*.pyo
+__pycache__/
+
+# Logs and generated output
+logs/
+output/
+
+# Other unnecessary files or directories
+docs/
+tests/
+data/
