@@ -1,6 +1,7 @@
 import re
 import os
 import csv
+import time
 from netmiko import ConnectHandler
 
 # GLOBAL VARIABLES
@@ -84,31 +85,35 @@ def run_backups(connection, CONTEXT_NAMES, BACKUP_SERVER_IP, BACKUP_SERVER_PATH,
             abort(f"Backup for context {CONTEXT} failed.")
 
 def main():
-    # Open the inventory file, and iterated down it
-    with open('DEVICE_INVENTORY.csv', 'r') as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            # Map the columns of the row being iterated to variables
-            FIREWALL_NAME = row['FIREWALL_NAME']
-            MANAGEMENT_IP = row['MANAGEMENT_IP']
-            BACKUP_SERVER_IP = row['BACKUP_SERVER_IP']
-            BACKUP_SERVER_PATH = row['BACKUP_SERVER_PATH']
-            EXPECTED_PROMPT = f"{FIREWALL_NAME}#"
-
-            # Connect to the firewall
-            connection = connect_firewall(FIREWALL_USERNAME, FIREWALL_PASSWORD, MANAGEMENT_IP)
-
-            # Changeto System Context
-            changeto_system(connection, FIREWALL_NAME, EXPECTED_PROMPT)
-
-            # Get A List of Contexts
-            CONTEXT_NAMES = get_contexts(connection, FIREWALL_NAME)
-
-            # Issue Backup Commands Per Context From System
-            run_backups(connection, CONTEXT_NAMES, BACKUP_SERVER_IP, BACKUP_SERVER_PATH, BACKUP_SERVER_USERNAME, BACKUP_SERVER_PASSWORD)
-
-            # Disconnect from the firewall
-            connection.disconnect()
+    while True:
+        # Open the inventory file, and iterated down it
+        with open('DEVICE_INVENTORY.csv', 'r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                # Map the columns of the row being iterated to variables
+                FIREWALL_NAME = row['FIREWALL_NAME']
+                MANAGEMENT_IP = row['MANAGEMENT_IP']
+                BACKUP_SERVER_IP = row['BACKUP_SERVER_IP']
+                BACKUP_SERVER_PATH = row['BACKUP_SERVER_PATH']
+                EXPECTED_PROMPT = f"{FIREWALL_NAME}#"
+    
+                # Connect to the firewall
+                connection = connect_firewall(FIREWALL_USERNAME, FIREWALL_PASSWORD, MANAGEMENT_IP)
+    
+                # Changeto System Context
+                changeto_system(connection, FIREWALL_NAME, EXPECTED_PROMPT)
+    
+                # Get A List of Contexts
+                CONTEXT_NAMES = get_contexts(connection, FIREWALL_NAME)
+    
+                # Issue Backup Commands Per Context From System
+                run_backups(connection, CONTEXT_NAMES, BACKUP_SERVER_IP, BACKUP_SERVER_PATH, BACKUP_SERVER_USERNAME, BACKUP_SERVER_PASSWORD)
+    
+                # Disconnect from the firewall
+                connection.disconnect()
+                
+        # Sleep for 8 hours
+        time.sleep(8 * 60 * 60)  # 8 hours = 8 * 60 minutes * 60 seconds
 
 # SCRIPT ACTIONS INITIALIZATION
 if __name__ == "__main__":
