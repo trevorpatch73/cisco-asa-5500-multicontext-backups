@@ -51,7 +51,7 @@ if not SNMP_PRIV_KEY:
 
 # INVOKABLE FUNCTIONS
 def log(message, LOG_MESSAGES):
-    print(f"LOG: {message}")
+    print("LOG:", message)
     LOG_MESSAGES.append(message)
     return LOG_MESSAGES
 
