@@ -11,7 +11,7 @@ docker_build:
   services:
     - docker:20.10.9-dind
   tags:
-    - RUNNER:DC1-RHEL7
+    - RUNNER:AWS-E1A-LAB-GITLAB-RUNNER01
   script:
     - docker build -t $IMAGE_NAME .
 
@@ -20,6 +20,6 @@ docker_run:
   stage: run
   image: docker:stable
   tags:
-    - RUNNER:DC1-RHEL7
+    - RUNNER:AWS-E1A-LAB-GITLAB-RUNNER01
   script:
     - docker run -d -v /var/run/docker.sock:/var/run/docker.sock -e FIREWALL_USERNAME=$FIREWALL_USERNAME -e FIREWALL_PASSWORD=$FIREWALL_PASSWORD -e BACKUP_SERVER_USERNAME=$BACKUP_SERVER_USERNAME -e BACKUP_SERVER_PASSWORD=$BACKUP_SERVER_PASSWORD -e SMTP_USERNAME=$SMTP_USERNAME -e SMTP_PASSWORD=$SMTP_PASSWORD -e SNMP_USER=$SNMP_USER -e SNMP_AUTH_KEY=$SNMP_AUTH_KEY -e SNMP_PRIV_KEY=$SNMP_PRIV_KEY $IMAGE_NAME
